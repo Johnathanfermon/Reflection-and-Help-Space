@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>You Are Not Alone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #ffecd2, #fcb69f);
+            --card: rgba(255,255,255,0.85);
+            --text: #2d2d2d;
+            --muted: #666666;
+            --accent: #ff7a5a;
+            --button: rgba(255,255,255,0.7);
+            --button-hover: rgba(255,255,255,0.9);
+        }
+
+        body.dark {
+            --bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --card: rgba(25,25,40,0.85);
+            --text: #f0f0ff;
+            --muted: #a0a0d0;
+            --accent: #6a5acd;
+            --button: rgba(50,50,80,0.7);
+            --button-hover: rgba(70,70,100,0.9);
+        }
+
+        body.light {
+            --bg: linear-gradient(135deg, #8ec5fc, #e0c3fc);
+            --card: rgba(255,255,255,0.9);
+            --text: #1a1a2e;
+            --muted: #4a5c7a;
+            --accent: #4a7bff;
+            --button: rgba(255,255,255,0.8);
+            --button-hover: rgba(255,255,255,1);
+        }
+
+        body.warm {
+            --bg: linear-gradient(135deg, #ffecd2, #fcb69f);
+            --card: rgba(255,255,255,0.85);
+            --text: #2d2d2d;
+            --muted: #666666;
+            --accent: #ff7a5a;
+            --button: rgba(255,255,255,0.7);
+            --button-hover: rgba(255,255,255,0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: "Segoe UI", system-ui, sans-serif;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.6s ease;
+        }
+
+        .theme-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .theme-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: var(--button);
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .theme-btn:hover { transform: scale(1.12); }
+
+        .card {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card);
+            backdrop-filter: blur(18px);
+            border-radius: 28px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 25%;
+            background: var(--accent);
+            border-radius: 8px;
+            transition: width 0.7s ease;
+        }
+
+        .question-container {
+            display: none;
+        }
+        .question-container.active {
+            display: block;
+        }
+
+        .question-title {
+            font-size: 2.3rem;
+            margin: 0.4em 0 0.8em;
+            line-height: 1.25;
+            font-weight: 650;
+        }
+
+        .scale-container {
+            display: flex;
+            gap: 12px;
+            margin: 2.2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .scale-option {
+            flex: 1;
+            min-width: 100px;
+            padding: 1.8rem 1rem;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.18);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scale-option:hover {
+            transform: translateY(-6px);
+            background: rgba(255,255,255,0.22);
+        }
+
+        .scale-option.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-6px) scale(1.04);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 550;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .continue-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .previous-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .skip-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--muted);
+        }
+
+        .continue-btn:hover { opacity: 0.92; transform: translateY(-2px); }
+        .previous-btn:hover { background: rgba(255,255,255,0.18); }
+        .skip-btn:hover   { color: var(--text); background: rgba(255,255,255,0.08); }
+
+        .text-answer {
+            width: 100%;
+            min-height: 160px;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            font-size: 1.1rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .completion-screen {
+            text-align: center;
+            display: none;
+        }
+        .completion-screen.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="warm">
+
+<div class="theme-controls">
+    <button class="theme-btn" onclick="setTheme('light')" title="Light">☀️</button>
+    <button class="theme-btn" onclick="setTheme('warm')"  title="Warm">🌅</button>
+    <button class="theme-btn" onclick="setTheme('dark')"  title="Dark">🌙</button>
+</div>
+
+<div class="card">
+
+    <div class="progress-section">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+            <div id="progressText" style="color:var(--accent);font-weight:600;">Question 1 of 4</div>
+            <div id="progressPercentage" style="color:var(--muted);">25%</div>
+        </div>
+        <div style="height:8px;background:rgba(255,255,255,0.18);border-radius:8px;overflow:hidden;">
+            <div id="progressBar" style="height:100%;width:25%;background:var(--accent);transition:width 0.7s ease;"></div>
+        </div>
+    </div>
+
+    <!-- Question 1 -->
+    <div class="question-container active" id="q1">
+        <div style="color:var(--accent);font-size:0.9rem;font-weight:600;margin-bottom:8px;">QUESTION 1</div>
+        <h1 class="question-title">How would you rate yourself on a scale of 1 to 10?</h1>
+
+        <div class="scale-container">
+            <div class="scale-option" data-value="1">1<br><small>Struggling</small></div>
+            <div class="scale-option" data-value="3">3<br><small>Not great</small></div>
+            <div class="scale-option active" data-value="5">5<br><small>Neutral</small></div>
+            <div class="scale-option" data-value="7">7<br><small>Doing okay</small></div>
+            <div class="scale-option" data-value="10">10<br><small>At my best</small></div>
+        </div>
+    </div>
+
+    <!-- Question 2,3,4 -->
+    <div class="question-container" id="q2">
+        <div style="color:var(--accent);font-size:0.9rem;font-weight:600;margin-bottom:8px;">QUESTION 2</div>
+        <h1 class="question-title">What do you regret most right now?</h1>
+        <textarea class="text-answer" id="a2" maxlength="1000"></textarea>
+    </div>
+
+    <div class="question-container" id="q3">
+        <div style="color:var(--accent);font-size:0.9rem;font-weight:600;margin-bottom:8px;">QUESTION 3</div>
+        <h1 class="question-title">If you could choose, how many more years would you like to live?</h1>
+        <textarea class="text-answer" id="a3" maxlength="800"></textarea>
+    </div>
+
+    <div class="question-container" id="q4">
+        <div style="color:var(--accent);font-size:0.9rem;font-weight:600;margin-bottom:8px;">QUESTION 4</div>
+        <h1 class="question-title">What do you usually eat in a day?</h1>
+        <textarea class="text-answer" id="a4" maxlength="800"></textarea>
+    </div>
+
+    <!-- Completion -->
+    <div class="completion-screen" id="finish">
+        <h1 style="font-size:2.8rem;margin:1.5em 0 0.4em;">Thank You</h1>
+        <p style="font-size:1.2rem;color:var(--muted);max-width:540px;margin:0 auto 2rem;">
+            Your answers are anonymous and help create a space where people feel less alone.
+        </p>
+    </div>
+
+    <div class="actions">
+        <button class="action-button previous-btn" id="btnPrev" style="display:none;">
+            <i class="fas fa-arrow-left"></i> Previous
+        </button>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;">
+            <button class="action-button skip-btn" id="btnSkip">
+                <i class="fas fa-forward"></i> Skip
+            </button>
+            <button class="action-button continue-btn" id="btnNext">
+                <i class="fas fa-arrow-right"></i> Continue
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function setTheme(theme) {
+    document.body.className = theme;
+    localStorage.setItem('theme', theme);
+}
+
+const savedTheme = localStorage.getItem('theme') || 'warm';
+document.body.className = savedTheme;
+
+const questions = [1,2,3,4];
+let current = 1;
+
+const btnNext = document.getElementById('btnNext');
+const btnPrev = document.getElementById('btnPrev');
+const btnSkip = document.getElementById('btnSkip');
+
+function updateProgress() {
+    const perc = (current / questions.length) * 100;
+    document.getElementById('progressBar').style.width = perc + '%';
+    document.getElementById('progressText').textContent = `Question ${current} of ${questions.length}`;
+    document.getElementById('progressPercentage').textContent = Math.round(perc) + '%';
+
+    btnPrev.style.display = current > 1 ? 'flex' : 'none';
+    btnSkip.style.display = current < 4 ? 'flex' : 'none';
+
+    if (current === 4) {
+        btnNext.innerHTML = '<i class="fas fa-check-circle"></i> Finish';
+    } else {
+        btnNext.innerHTML = '<i class="fas fa-arrow-right"></i> Continue';
+    }
+}
+
+function showQuestion(n) {
+    document.querySelectorAll('.question-container').forEach(el => el.classList.remove('active'));
+    document.getElementById('finish').classList.remove('active');
+
+    document.getElementById('q'+n).classList.add('active');
+    current = n;
+    updateProgress();
+}
+
+function goFinish() {
+    document.querySelectorAll('.question-container').forEach(el => el.classList.remove('active'));
+    document.getElementById('finish').classList.add('active');
+    document.querySelector('.actions').style.display = 'none';
+}
+
+btnNext.onclick = () => {
+    if (current === 4) {
+        goFinish();
+    } else {
+        showQuestion(current + 1);
+    }
+};
+
+btnPrev.onclick = () => {
+    if (current > 1) showQuestion(current - 1);
+};
+
+btnSkip.onclick = () => {
+    if (current === 4) goFinish();
+    else showQuestion(current + 1);
+};
+
+// Scale selection
+document.querySelectorAll('.scale-option').forEach(el => {
+    el.onclick = () => {
+        document.querySelectorAll('.scale-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        btnNext.disabled = false;
+    };
+});
+
+// Initial state
+updateProgress();
+</script>
+</body>
+</html>

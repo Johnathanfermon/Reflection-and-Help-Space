@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winter Sanctuary - Just Be Here</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+    --overlay: rgba(120,80,40,0.25);
+    --bg-card: rgba(255,245,235,0.85);
+    --text: #2a1f18;
+    --muted: #6a4e3a;
+    --button: rgba(255,220,190,0.7);
+    --button-hover: rgba(255,200,160,0.9);
+}
+
+body.dark {
+    --overlay: rgba(10,10,30,0.45);
+    --bg-card: rgba(25,25,40,0.85);
+    --text: #f0f0ff;
+    --muted: #a0a0d0;
+    --button: rgba(50,50,80,0.7);
+    --button-hover: rgba(70,70,100,0.9);
+}
+
+body.light {
+    --overlay: rgba(150,180,220,0.2);
+    --bg-card: rgba(245,250,255,0.85);
+    --text: #1a1a2e;
+    --muted: #4a5c7a;
+    --button: rgba(220,235,255,0.7);
+    --button-hover: rgba(200,220,245,0.9);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    position: relative;
+    overflow-x: hidden;
+    background: #1a2980;
+}
+
+/* Simplified Background */
+.fluid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, #5a3e2a, #b2946e, #5a3e2a);
+    background-size: 400% 400%;
+    animation: fluidBackground 40s linear infinite;
+}
+
+body.dark .fluid-bg {
+    background: linear-gradient(135deg, #0a0a20, #25255a, #0a0a20);
+    background-size: 400% 400%;
+    animation: fluidBackground 40s linear infinite;
+}
+
+body.light .fluid-bg {
+    background: linear-gradient(135deg, #6da1d6, #a8cfff, #6da1d6);
+    background-size: 400% 400%;
+    animation: fluidBackground 40s linear infinite;
+}
+
+@keyframes fluidBackground {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    z-index: 1;
+    transition: background 0.5s;
+}
+
+/* Optimized Snowflakes */
+#snowflakes-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.snowflake {
+    position: absolute;
+    top: -20px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1em;
+    opacity: 0;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    z-index: 2;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+body.warm .snowflake { color: rgba(255, 250, 240, 0.8); }
+body.light .snowflake { color: rgba(255, 255, 255, 0.9); }
+body.dark .snowflake { color: rgba(220, 230, 255, 0.8); }
+
+/* Heart animation */
+.heart {
+    position: absolute;
+    font-size: 1.2em;
+    color: #ff6b8b;
+    opacity: 0;
+    animation: floatUp 2.5s ease-out forwards;
+    z-index: 3;
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(0.5); opacity: 1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+
+/* Enhanced Sidebar - Now in front */
+.sidebar {
+    width: 260px;
+    padding: 30px 20px;
+    position: relative;
+    z-index: 10; /* Increased z-index to bring in front */
+    background: rgba(255, 255, 255, 0.12);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+}
+
+.sidebar h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    margin-bottom: 25px;
+    font-size: 24px;
+    color: var(--text);
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav a {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--button);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+    transform-origin: left center;
+}
+
+.nav a i {
+    margin-right: 12px;
+    font-size: 1.1em;
+    width: 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced button hover animations */
+.nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transition: left 0.6s ease;
+    z-index: 1;
+}
+
+.nav a:hover::before {
+    left: 100%;
+}
+
+.nav a:hover {
+    background: var(--button-hover);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    letter-spacing: 0.3px;
+}
+
+.nav a:hover i {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.nav a:active {
+    transform: translateX(8px) scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Pulse animation for active item */
+.nav a.active {
+    animation: pulseGlow 2s infinite;
+    background: var(--button-hover);
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(255, 255, 255, 0); }
+}
+
+/* Main content */
+.main {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5; /* Lower than sidebar */
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.trust {
+    max-width: 600px;
+    background: var(--bg-card);
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.trust h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.trust p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+/* Enhanced Action Buttons */
+.actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 16px 32px;
+    border-radius: 40px;
+    border: none;
+    background: var(--button);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 160px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover animations */
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    z-index: 0;
+}
+
+button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    transition: left 0.6s ease;
+    z-index: 1;
+}
+
+button:hover::after {
+    left: 100%;
+}
+
+button span {
+    position: relative;
+    z-index: 2;
+}
+
+button:hover {
+    background: var(--button-hover);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+button:active {
+    transform: translateY(-2px) scale(1.02);
+    transition: transform 0.1s ease;
+}
+
+/* Controls */
+.controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 11; /* Above sidebar */
+    transition: opacity 0.8s ease;
+}
+
+.controls button {
+    min-width: auto;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    backdrop-filter: blur(8px);
+}
+
+.controls button:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 12;
+    font-size: 24px;
+    background: var(--button);
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease, opacity 0.8s ease;
+}
+
+.hamburger:hover {
+    background: var(--button-hover);
+    transform: scale(1.05);
+}
+
+/* "Just Be Here" Meditation Screen */
+.meditation-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.meditation-screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.meditation-content {
+    max-width: 800px;
+    width: 100%;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    transition: transform 1s ease;
+}
+
+body.dark .meditation-content {
+    background: rgba(20, 20, 40, 0.95);
+}
+
+body.light .meditation-content {
+    background: rgba(250, 250, 255, 0.95);
+}
+
+.meditation-screen.active .meditation-content {
+    transform: translateY(0);
+}
+
+.meditation-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 500;
+    margin-bottom: 40px;
+    color: var(--text);
+    line-height: 1.2;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease 0.3s forwards;
+}
+
+.meditation-message {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 30px;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease 0.6s forwards;
+}
+
+.meditation-message p {
+    margin-bottom: 25px;
+}
+
+.meditation-quote {
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--text);
+    margin: 40px 0;
+    padding: 30px;
+    border-left: 4px solid #ff6b8b;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0 10px 10px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease 0.9s forwards;
+}
+
+.back-button {
+    margin-top: 50px;
+    padding: 16px 40px;
+    font-size: 1.2rem;
+    background: var(--button);
+    border: none;
+    border-radius: 40px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease 1.2s forwards;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.back-button:hover {
+    background: var(--button-hover);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100%;
+        z-index: 10;
+        transition: left 0.3s ease;
+        background: var(--bg-card);
+        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .main {
+        padding: 30px 20px;
+        margin-left: 0;
+    }
+    
+    .trust {
+        padding: 30px 25px;
+    }
+    
+    .trust h1 {
+        font-size: 24px;
+    }
+    
+    .trust p {
+        font-size: 15px;
+    }
+    
+    .actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    button {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .controls {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .controls button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    /* Mobile adjustments for meditation screen */
+    .meditation-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    .meditation-message {
+        font-size: 1.3rem;
+        line-height: 1.6;
+    }
+    
+    .meditation-quote {
+        font-size: 1.4rem;
+        padding: 20px;
+        margin: 30px 0;
+    }
+    
+    .meditation-content {
+        padding: 30px 20px;
+        margin: 0 15px;
+    }
+    
+    .back-button {
+        padding: 14px 30px;
+        font-size: 1.1rem;
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .meditation-title {
+        font-size: 1.8rem;
+    }
+    
+    .meditation-message {
+        font-size: 1.1rem;
+    }
+    
+    .meditation-quote {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+    
+    .meditation-content {
+        padding: 25px 15px;
+    }
+    
+    .back-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
+</style>
+</head>
+
+<body class="warm">
+
+<div class="fluid-bg"></div>
+<div class="overlay"></div>
+
+<div id="snowflakes-container"></div>
+
+<!-- Meditation Screen (Hidden by default) -->
+<div class="meditation-screen" id="meditationScreen">
+    <div class="meditation-content">
+        <h1 class="meditation-title">Just Be Here</h1>
+        
+        <div class="meditation-message">
+            <p><strong>This is a space to share your thoughts.</strong></p>
+            <p>Your answers help others like you feel seen and less alone.</p>
+            <p>There are no right or wrong answers.</p>
+            <p>Answer in your own way, and feel free to skip anything you don't want to answer.</p>
+        </div>
+        
+        <div class="meditation-quote">
+            "In this moment, you are exactly where you need to be."
+        </div>
+        
+        <button class="back-button" id="backButton">Return to Sanctuary</button>
+    </div>
+</div>
+
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+
+<div class="sidebar" id="sidebar">
+    <h2>Unsaid</h2>
+    <div class="nav">
+        <a href="#" class="active"><i class="fas fa-comment"></i> Chat</a>
+        <a href="#"><i class="fas fa-users"></i> Forums</a>
+        <a href="#"><i class="fas fa-lightbulb"></i> Insights</a>
+        <a href="#"><i class="fas fa-sun"></i> Improve</a>
+        <a href="#"><i class="fas fa-heart"></i> Make It Count</a>
+        <a href="#"><i class="fas fa-user-friends"></i> Another You</a>
+        <a href="#"><i class="fas fa-hands-helping"></i> CareTakers</a>
+        <a href="#"><i class="fas fa-newspaper"></i> News</a>
+        <a href="#"><i class="fas fa-calendar-alt"></i> Events</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="trust">
+        <h1>For the people your heart quietly understands.</h1>
+
+        <p>For the beautiful hearts your heart reaches.</p>
+        <p>Someone, somewhere, is thinking the same.</p>
+        <p>If this thought feels familiar, it's because it is.</p>
+
+        <br>
+
+        <p><strong>Three honest questions. No judgment.</strong></p>
+        <p>
+            Answer only what you want.<br>
+            Everything is anonymous.<br>
+            Answer only what feels right.
+        </p>
+
+        <div class="actions">
+           <a href = "questions.html"><button id="beginButton"><span>Begin Gently</span></button></a>
+            <button id="justBeHereButton"><span>Just Be Here</span></button>
+        </div>
+    </div>
+</div>
+
+<div class="controls">
+    <button onclick="setMode('light')" title="Light Mode">☀️</button>
+    <button onclick="setMode('warm')" title="Warm Mode">🌅</button>
+    <button onclick="setMode('dark')" title="Dark Mode">🌙</button>
+</div>
+
+<script>
+// Optimized Snowflake System
+class SnowflakeSystem {
+    constructor() {
+        this.container = document.getElementById('snowflakes-container');
+        this.maxFlakes = 60;
+        this.activeFlakes = 0;
+        this.flakes = [];
+        this.heartCount = 0;
+        
+        // Create initial flakes
+        for (let i = 0; i < 20; i++) {
+            this.createSnowflake();
+        }
+        
+        // Maintain count with interval
+        this.maintainFlakes();
+    }
+    
+    createSnowflake() {
+        if (this.activeFlakes >= this.maxFlakes) return null;
+        
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.textContent = Math.random() > 0.5 ? '❄' : '❅';
+        
+        // Random properties
+        const size = Math.random() * 1 + 0.5;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 15 + 10;
+        const delay = Math.random() * 5;
+        const opacity = Math.random() * 0.5 + 0.3;
+        const horizontalMove = Math.random() * 40 - 20;
+        
+        // Apply styles
+        flake.style.cssText = `
+            font-size: ${size}em;
+            left: ${left}vw;
+            opacity: ${opacity};
+            animation: fall ${duration}s linear ${delay}s infinite;
+            --move-x: ${horizontalMove};
+        `;
+        
+        this.container.appendChild(flake);
+        this.activeFlakes++;
+        
+        // Store reference
+        const flakeObj = { element: flake, duration: duration * 1000, delay: delay * 1000 };
+        this.flakes.push(flakeObj);
+        
+        // Schedule removal
+        setTimeout(() => {
+            if (flake.parentNode) {
+                flake.remove();
+                this.activeFlakes--;
+                const index = this.flakes.indexOf(flakeObj);
+                if (index > -1) this.flakes.splice(index, 1);
+                
+                // Occasionally send heart
+                if (Math.random() > 0.7) {
+                    this.sendHeart(left);
+                }
+            }
+        }, flakeObj.duration + flakeObj.delay);
+        
+        return flakeObj;
+    }
+    
+    sendHeart(left) {
+        this.heartCount++;
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = '❤️';
+        heart.style.cssText = `
+            left: ${left}vw;
+            top: 95vh;
+        `;
+        document.body.appendChild(heart);
+        
+        setTimeout(() => heart.remove(), 2500);
+    }
+    
+    maintainFlakes() {
+        setInterval(() => {
+            if (this.activeFlakes < this.maxFlakes) {
+                this.createSnowflake();
+            }
+        }, 300);
+    }
+    
+    clear() {
+        this.container.innerHTML = '';
+        this.activeFlakes = 0;
+        this.flakes = [];
+    }
+}
+
+// Theme and Menu Functions
+function setMode(mode) {
+    document.body.className = mode;
+    if (window.snowflakeSystem) {
+        window.snowflakeSystem.clear();
+        window.snowflakeSystem = new SnowflakeSystem();
+    }
+}
+
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+    
+    // Toggle hamburger animation
+    const hamburger = document.querySelector('.hamburger');
+    hamburger.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+}
+
+// "Just Be Here" Meditation Screen Functions
+function showMeditationScreen() {
+    const meditationScreen = document.getElementById('meditationScreen');
+    const mainContent = document.querySelector('.main');
+    const sidebar = document.getElementById('sidebar');
+    const controls = document.querySelector('.controls');
+    const hamburger = document.querySelector('.hamburger');
+    
+    // Hide all interface elements with fade out
+    mainContent.style.opacity = '0';
+    mainContent.style.pointerEvents = 'none';
+    
+    sidebar.style.opacity = '0';
+    sidebar.style.pointerEvents = 'none';
+    
+    controls.style.opacity = '0';
+    controls.style.pointerEvents = 'none';
+    
+    hamburger.style.opacity = '0';
+    hamburger.style.pointerEvents = 'none';
+    
+    // Show meditation screen with fade in
+    setTimeout(() => {
+        meditationScreen.classList.add('active');
+        
+        // Increase snowflake count for meditation mode
+        if (window.snowflakeSystem) {
+            window.snowflakeSystem.maxFlakes = 80;
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => window.snowflakeSystem.createSnowflake(), i * 100);
+            }
+        }
+    }, 300);
+}
+
+function hideMeditationScreen() {
+    const meditationScreen = document.getElementById('meditationScreen');
+    const mainContent = document.querySelector('.main');
+    const sidebar = document.getElementById('sidebar');
+    const controls = document.querySelector('.controls');
+    const hamburger = document.querySelector('.hamburger');
+    
+    // Hide meditation screen
+    meditationScreen.classList.remove('active');
+    
+    // Restore snowflake count to normal
+    if (window.snowflakeSystem) {
+        window.snowflakeSystem.maxFlakes = 60;
+    }
+    
+    // Show all interface elements with fade in
+    setTimeout(() => {
+        mainContent.style.opacity = '1';
+        mainContent.style.pointerEvents = 'auto';
+        
+        sidebar.style.opacity = '1';
+        sidebar.style.pointerEvents = 'auto';
+        
+        controls.style.opacity = '1';
+        controls.style.pointerEvents = 'auto';
+        
+        hamburger.style.opacity = '1';
+        hamburger.style.pointerEvents = 'auto';
+    }, 500);
+}
+
+// Enhanced button click effects
+function addButtonEffects() {
+    // Navigation buttons
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            document.querySelectorAll('.nav a').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Ripple effect
+            createRippleEffect(this, e);
+        });
+    });
+    
+    // Action buttons
+    document.querySelectorAll('#beginButton, .controls button').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            createRippleEffect(this, e);
+            
+            // If it's the "Begin Gently" button
+            if (this.id === 'beginButton') {
+                // You can add specific functionality here
+                console.log('Begin Gently clicked');
+            }
+        });
+    });
+    
+    // "Just Be Here" button
+    const justBeHereButton = document.getElementById('justBeHereButton');
+    if (justBeHereButton) {
+        justBeHereButton.addEventListener('click', function(e) {
+            createRippleEffect(this, e);
+            showMeditationScreen();
+        });
+    }
+    
+    // Back button on meditation screen
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+        backButton.addEventListener('click', function(e) {
+            createRippleEffect(this, e);
+            hideMeditationScreen();
+        });
+    }
+}
+
+// Ripple effect function
+function createRippleEffect(element, event) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        width: ${size}px;
+        height: ${size}px;
+        top: ${y}px;
+        left: ${x}px;
+        pointer-events: none;
+        z-index: 1;
+    `;
+    
+    element.appendChild(ripple);
+    
+    setTimeout(() => {
+        if (ripple.parentNode) ripple.remove();
+    }, 600);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Add fall animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--flake-opacity, 0.8);
+            }
+            90% {
+                opacity: var(--flake-opacity, 0.8);
+            }
+            100% {
+                transform: translateY(100vh) translateX(calc(var(--move-x, 0) * 1px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Start snowflake system
+    window.snowflakeSystem = new SnowflakeSystem();
+    
+    // Add button effects
+    addButtonEffects();
+    
+    // Add escape key support for meditation screen
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const meditationScreen = document.getElementById('meditationScreen');
+            if (meditationScreen.classList.contains('active')) {
+                hideMeditationScreen();
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
