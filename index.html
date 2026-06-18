@@ -43,12 +43,13 @@ body.light {
 }
 
 body {
+    height: 100vh;
     min-height: 100vh;
     display: flex;
     font-family: 'Inter', sans-serif;
     color: var(--text);
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
     background: #1a2980;
 }
 
@@ -139,6 +140,8 @@ body.dark .snowflake { color: rgba(220, 230, 255, 0.8); }
 /* Enhanced Sidebar - Now in front */
 .sidebar {
     width: 260px;
+    height: 100vh;
+    overflow-y: auto;
     padding: 30px 20px;
     position: relative;
     z-index: 10; /* Increased z-index to bring in front */
@@ -150,6 +153,9 @@ body.dark .snowflake { color: rgba(220, 230, 255, 0.8); }
     transition: transform 0.3s ease;
 }
 
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
 .sidebar h2 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 500;
@@ -159,6 +165,13 @@ body.dark .snowflake { color: rgba(220, 230, 255, 0.8); }
     text-align: center;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.sidebar h2:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
 }
 
 .nav {
@@ -240,12 +253,19 @@ body.dark .snowflake { color: rgba(220, 230, 255, 0.8); }
 /* Main content */
 .main {
     flex: 1;
-    padding: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 60px 50px 90px;
     z-index: 5; /* Lower than sidebar */
     transition: opacity 0.8s ease, transform 0.8s ease;
+    scroll-behavior: smooth;
+}
+
+.main::-webkit-scrollbar { width: 7px; }
+.main::-webkit-scrollbar-track { background: transparent; }
+.main::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
 }
 
 .trust {
@@ -642,6 +662,248 @@ body.light .meditation-content {
         font-size: 1rem;
     }
 }
+
+/* ============================================= */
+/* In-Page "Pages" System - Sections live here    */
+/* ============================================= */
+
+.page {
+    display: none;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.page.active {
+    display: block;
+    animation: pageIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page.home-page.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 150px);
+}
+
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.page-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 1.6rem;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    animation: iconFloat 4.5s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-8px) rotate(5deg); }
+}
+
+.page-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+}
+
+.page-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+.page-body {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 38px 42px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    margin-bottom: 38px;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: cardIn 0.7s ease 0.1s forwards;
+}
+
+.page-body p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.18rem;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 18px;
+}
+
+.page-body p:last-child { margin-bottom: 0; }
+.page-body p strong { color: var(--text); }
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.info-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 30px 22px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardIn 0.6s ease forwards;
+}
+
+.info-card:nth-child(1) { animation-delay: 0.15s; }
+.info-card:nth-child(2) { animation-delay: 0.3s; }
+.info-card:nth-child(3) { animation-delay: 0.45s; }
+
+@keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.info-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.info-card .card-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--button);
+    font-size: 1.3rem;
+    color: var(--text);
+    transition: transform 0.4s ease, background 0.4s ease;
+}
+
+.info-card:hover .card-icon {
+    transform: scale(1.18) rotate(-8deg);
+    background: var(--button-hover);
+}
+
+.info-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.info-card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+.gentle-note {
+    margin-top: 22px;
+    padding: 16px 20px;
+    font-size: 0.98rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--muted);
+    border-left: 3px solid #ff6b8b;
+    background: rgba(255, 107, 139, 0.07);
+    border-radius: 0 12px 12px 0;
+    text-align: left;
+}
+
+.page-cta {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Animated CTA buttons for each page */
+.cta-button {
+    animation: ctaGlow 3s ease-in-out infinite;
+}
+
+@keyframes ctaGlow {
+    0%, 100% { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
+    50%      { box-shadow: 0 8px 30px rgba(255, 107, 139, 0.4); }
+}
+
+.cta-button:hover { animation-play-state: paused; }
+
+/* Gentle toast notification */
+.toast {
+    position: fixed;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    background: var(--bg-card);
+    color: var(--text);
+    padding: 16px 30px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.08rem;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    max-width: 88vw;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 900px) {
+    .main {
+        padding: 95px 22px 60px;
+    }
+
+    .page.home-page.active {
+        min-height: auto;
+    }
+
+    .page-header h1 { font-size: 2.1rem; }
+    .page-tagline { font-size: 1.15rem; }
+
+    .page-body {
+        padding: 28px 24px;
+    }
+
+    .page-body p { font-size: 1.05rem; }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
 
@@ -675,42 +937,346 @@ body.light .meditation-content {
 <div class="hamburger" onclick="toggleMenu()">☰</div>
 
 <div class="sidebar" id="sidebar">
-    <h2>Unsaid</h2>
+    <h2 onclick="navigateTo('home')">Unsaid</h2>
     <div class="nav">
-        <a href="#" class="active"><i class="fas fa-comment"></i> Chat</a>
-        <a href="#"><i class="fas fa-users"></i> Forums</a>
-        <a href="#"><i class="fas fa-lightbulb"></i> Insights</a>
-        <a href="#"><i class="fas fa-sun"></i> Improve</a>
-        <a href="#"><i class="fas fa-heart"></i> Make It Count</a>
-        <a href="#"><i class="fas fa-user-friends"></i> Another You</a>
-        <a href="#"><i class="fas fa-hands-helping"></i> CareTakers</a>
-        <a href="#"><i class="fas fa-newspaper"></i> News</a>
-        <a href="#"><i class="fas fa-calendar-alt"></i> Events</a>
+        <a href="#" class="active" data-page="home"><i class="fas fa-snowflake"></i> Home</a>
+        <a href="#" data-page="chat"><i class="fas fa-comment"></i> Chat</a>
+        <a href="#" data-page="forums"><i class="fas fa-users"></i> Forums</a>
+        <a href="#" data-page="insights"><i class="fas fa-lightbulb"></i> Insights</a>
+        <a href="#" data-page="improve"><i class="fas fa-sun"></i> Improve</a>
+        <a href="#" data-page="makeitcount"><i class="fas fa-heart"></i> Make It Count</a>
+        <a href="#" data-page="anotheryou"><i class="fas fa-user-friends"></i> Another You</a>
+        <a href="#" data-page="caretakers"><i class="fas fa-hands-helping"></i> CareTakers</a>
+        <a href="#" data-page="news"><i class="fas fa-newspaper"></i> News</a>
+        <a href="#" data-page="events"><i class="fas fa-calendar-alt"></i> Events</a>
     </div>
 </div>
 
-<div class="main">
-    <div class="trust">
-        <h1>For the people your heart quietly understands.</h1>
+<div class="main" id="mainContent">
 
-        <p>For the beautiful hearts your heart reaches.</p>
-        <p>Someone, somewhere, is thinking the same.</p>
-        <p>If this thought feels familiar, it's because it is.</p>
+    <!-- HOME -->
+    <div class="page home-page active" id="page-home">
+        <div class="trust">
+            <h1>For the people your heart quietly understands.</h1>
 
-        <br>
+            <p>For the beautiful hearts your heart reaches.</p>
+            <p>Someone, somewhere, is thinking the same.</p>
+            <p>If this thought feels familiar, it's because it is.</p>
 
-        <p><strong>Three honest questions. No judgment.</strong></p>
-        <p>
-            Answer only what you want.<br>
-            Everything is anonymous.<br>
-            Answer only what feels right.
-        </p>
+            <br>
 
-        <div class="actions">
-           <a href = "questions.html"><button id="beginButton"><span>Begin Gently</span></button></a>
-            <button id="justBeHereButton"><span>Just Be Here</span></button>
+            <p><strong>Three honest questions. No judgment.</strong></p>
+            <p>
+                Answer only what you want.<br>
+                Everything is anonymous.<br>
+                Answer only what feels right.
+            </p>
+
+            <div class="actions">
+               <a href = "questions.html"><button id="beginButton"><span>Begin Gently</span></button></a>
+                <button id="justBeHereButton"><span>Just Be Here</span></button>
+            </div>
         </div>
     </div>
+
+    <!-- CHAT -->
+    <div class="page" id="page-chat">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-comment"></i></div>
+            <h1>Chat</h1>
+            <p class="page-tagline">Some things are easier typed than spoken aloud.</p>
+        </div>
+        <div class="page-body">
+            <p>There's a particular kind of loneliness that comes from carrying something you've never said out loud — not because no one would listen, but because saying it feels too big, too heavy, too real. Here, you don't have to perform okay-ness. You can type the sentence you've been afraid to finish, and someone gentle will be on the other side of it.</p>
+            <p>You don't need the right words. You don't need to have it figured out. You just need to start, even with three words, even with none at all — just an ellipsis, if that's all you have tonight. <strong>That's enough to begin.</strong></p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-user-secret"></i></div>
+                <h3>Always Anonymous</h3>
+                <p>No name, no face, no history attached. Just your words, held gently, exactly as you wrote them.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-clock"></i></div>
+                <h3>No Clock Watching</h3>
+                <p>Stay for two minutes or two hours. There's no version of this where you're taking up too much space.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-headphones"></i></div>
+                <h3>Real, Trained Listeners</h3>
+                <p>People who've learned how to sit with hard feelings without flinching, fixing, or rushing you anywhere.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'Thank you for wanting to talk. This room is still being warmed up — check back soon. 💬')"><span>Start Talking</span></button>
+        </div>
+    </div>
+
+    <!-- FORUMS -->
+    <div class="page" id="page-forums">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-users"></i></div>
+            <h1>Forums</h1>
+            <p class="page-tagline">You are not the only one awake with this on your mind.</p>
+        </div>
+        <div class="page-body">
+            <p>Somewhere, right now, someone is typing almost the exact sentence you've been too afraid to write. These forums exist so you can find them — not to fix each other, just to recognize each other. To read something and quietly think, <em>"oh, it's not just me."</em></p>
+            <p>You don't have to introduce yourself. You don't have to explain why you're here. Lurk for a while, read what others have carried, and leave whenever you want — or stay long enough to leave a few words for the next quiet person who needs them.</p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-seedling"></i></div>
+                <h3>Shared Threads</h3>
+                <p>Grief, anxiety, loneliness, joy, in-between days — every feeling has a thread, and every thread has company.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-shield-heart"></i></div>
+                <h3>Kept Kind</h3>
+                <p>Gently moderated so this stays a soft place to land, never a place that adds to what you're already carrying.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                <h3>Reading Counts Too</h3>
+                <p>Some days, just reading someone else's honesty is its own kind of comfort. You never have to post to belong here.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'These stories are still being gathered. Soon, you\'ll find good company here. 🤍')"><span>Browse the Forums</span></button>
+        </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="page" id="page-insights">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-lightbulb"></i></div>
+            <h1>Insights</h1>
+            <p class="page-tagline">Sometimes you don't know what you feel until you see it written down.</p>
+        </div>
+        <div class="page-body">
+            <p>Feelings are slippery when they only live in your head — they loop, they tangle, they convince you things are smaller or bigger than they really are. Insights is a quiet mirror: a place to notice the shape of your own days, gently, without judgment, without grades.</p>
+            <p>You are allowed to learn things about yourself slowly. Noticing a pattern doesn't mean you have to fix it today. <strong>Sometimes awareness is the whole, brave step</strong> — and that already counts as progress.</p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Mood Patterns</h3>
+                <p>See your week the way a friend would — with curiosity, never criticism.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-lock"></i></div>
+                <h3>A Private Journal</h3>
+                <p>Written only for you, kept exactly as private as you need it to be.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-calendar-week"></i></div>
+                <h3>Weekly Reflections</h3>
+                <p>A few gentle prompts to help you check in with yourself, the way you'd check in on someone you love.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'Your reflections matter. This mirror is still being polished — almost ready. ✨')"><span>Begin Reflecting</span></button>
+        </div>
+    </div>
+
+    <!-- IMPROVE -->
+    <div class="page" id="page-improve">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-sun"></i></div>
+            <h1>Improve</h1>
+            <p class="page-tagline">Healing isn't a straight line, and that's alright.</p>
+        </div>
+        <div class="page-body">
+            <p>You don't have to overhaul your whole life tonight. Growth that actually lasts usually looks small from the outside — a breath held a little longer, a thought caught before it spirals, a bedtime that's ten minutes earlier than yesterday's.</p>
+            <p>Whatever pace you're moving at right now is the right pace. These tools aren't here to rush you toward "better" — <strong>they're here to walk beside you</strong> while you find your own way there, one gentle step at a time.</p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-wind"></i></div>
+                <h3>Breathing Exercises</h3>
+                <p>Simple, guided breaths for the moments your mind is moving faster than your body.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-anchor"></i></div>
+                <h3>Grounding Techniques</h3>
+                <p>Small, physical ways to come back to the room when your thoughts have wandered somewhere unsafe.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Gentle Habits</h3>
+                <p>Tiny, kind routines you can actually keep — because consistency matters more than intensity.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'One small step is already growth. These tools are on their way to you. 🌱')"><span>Explore the Tools</span></button>
+        </div>
+    </div>
+
+    <!-- MAKE IT COUNT -->
+    <div class="page" id="page-makeitcount">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-heart"></i></div>
+            <h1>Make It Count</h1>
+            <p class="page-tagline">A single kind word, even to yourself, can change a whole day.</p>
+        </div>
+        <div class="page-body">
+            <p>Some days, the win is getting out of bed. Some days, it's sending one text you'd been avoiding, or simply choosing not to say something cruel to yourself in the mirror. This is a place to notice those wins, even the quiet ones nobody else will ever see.</p>
+            <p>You don't need a grand gesture to matter today. <strong>You already do</strong> — simply by being here, by trying, by reading this far. That counts. We'd just like to help you remember it.</p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-feather"></i></div>
+                <h3>Gratitude Notes</h3>
+                <p>A line a day, even one word, to gently collect what's still good.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-trophy"></i></div>
+                <h3>Tiny Wins Tracker</h3>
+                <p>Because surviving a hard day is an achievement, even when nobody hands you a medal for it.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>Small Acts of Kindness</h3>
+                <p>Little ways to be gentle with the people around you — and just as importantly, with yourself.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'Just being here already counts. More ways to celebrate small wins are coming. 💛')"><span>Start Counting the Good</span></button>
+        </div>
+    </div>
+
+    <!-- ANOTHER YOU -->
+    <div class="page" id="page-anotheryou">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-user-friends"></i></div>
+            <h1>Another You</h1>
+            <p class="page-tagline">What would you say to a friend who felt exactly like you do right now?</p>
+        </div>
+        <div class="page-body">
+            <p>We are so often kinder to everyone except ourselves. Another You is built around a simple, gentle idea: stepping just slightly outside your own head, so you can offer yourself the same patience you'd give a friend who came to you in tears.</p>
+            <p>The person you're becoming is already taking shape, quietly, in moments like this one — moments where you chose to stay, to look a little closer, to be a little softer with yourself. <strong>That version of you is closer than you think.</strong></p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-envelope-open-text"></i></div>
+                <h3>Letters to Future Me</h3>
+                <p>Write to the person you're becoming. Read their replies on the days you need them most.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-people-group"></i></div>
+                <h3>The Compassion Mirror</h3>
+                <p>Picture a friend in your exact situation — and notice how differently you'd speak to them.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-arrows-rotate"></i></div>
+                <h3>Reframe a Thought</h3>
+                <p>Gentle prompts to hold a hard thought from a kinder angle, without pretending it isn't hard.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'She is closer than you think. This page is still finding its voice. 🫂')"><span>Meet Another You</span></button>
+        </div>
+    </div>
+
+    <!-- CARETAKERS -->
+    <div class="page" id="page-caretakers">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-hands-helping"></i></div>
+            <h1>CareTakers</h1>
+            <p class="page-tagline">When it's heavier than you can hold alone, there are hands ready to help.</p>
+        </div>
+        <div class="page-body">
+            <p>Some weights aren't meant to be carried solo, and reaching for help with those is not weakness — it's wisdom. CareTakers connects you with trained listeners, mentors, and licensed professionals who've chosen this work because they genuinely want to walk alongside people through hard chapters.</p>
+            <p>Asking for support doesn't mean you've failed at coping. It means you're taking your own wellbeing seriously enough to bring in someone qualified to help carry it. <strong>That's not giving up — that's one of the bravest things a person can do.</strong></p>
+            <div class="gentle-note">If you're ever in immediate danger or crisis, please reach out right now to a crisis line or emergency services in your country, or to someone you trust nearby. You deserve support the moment you need it — not just whenever it's convenient.</div>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-comments"></i></div>
+                <h3>Trained Listeners</h3>
+                <p>People trained to hold space for hard feelings, available when you need an ear that won't flinch.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-user-doctor"></i></div>
+                <h3>Professional Referrals</h3>
+                <p>Gentle guidance toward licensed counselors and therapists near you, whenever you're ready for that step.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-life-ring"></i></div>
+                <h3>Support, Around the Clock</h3>
+                <p>Because the hardest moments rarely check the time before they arrive.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'Reaching out takes courage — and it is already working. Full listings are coming soon. 🤝')"><span>Find Support</span></button>
+        </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="page" id="page-news">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-newspaper"></i></div>
+            <h1>News</h1>
+            <p class="page-tagline">Small reminders that the world is learning to talk about this, too.</p>
+        </div>
+        <div class="page-body">
+            <p>Mental health used to be a hallway whisper; slowly, gently, it's becoming a normal part of the conversation. News gathers research, stories, and small wins from the wider world — proof that talking about hard things is becoming a little easier for everyone, not just you.</p>
+            <p><strong>You're part of that shift simply by being here</strong>, by choosing honesty over silence. That matters more than it might feel like it does on an ordinary day.</p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-flask"></i></div>
+                <h3>Research & Findings</h3>
+                <p>What science is learning about feelings, healing, and how brains carry hard things.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3>Awareness Campaigns</h3>
+                <p>Stories from people and movements working to make these conversations normal.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-comment-dots"></i></div>
+                <h3>Community Voices</h3>
+                <p>Real reflections from people in this community, shared with their permission and your privacy in mind.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'Good news is brewing. Come back soon for stories worth reading. 📰')"><span>Read the Latest</span></button>
+        </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="page" id="page-events">
+        <div class="page-header">
+            <div class="page-icon"><i class="fas fa-calendar-alt"></i></div>
+            <h1>Events</h1>
+            <p class="page-tagline">You're invited — no RSVP pressure, no perfect mood required.</p>
+        </div>
+        <div class="page-body">
+            <p>You can show up exactly as you are: tired, unsure, having a good day, having a terrible one. Events brings together quiet gatherings, support circles, and workshops for people who'd rather not face hard seasons completely alone.</p>
+            <p>There's no version of "too much" or "not enough" here. Come for five minutes or stay the whole time — <strong>either way, a seat is being kept for you.</strong></p>
+        </div>
+        <div class="card-grid">
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-circle-nodes"></i></div>
+                <h3>Support Circles</h3>
+                <p>Small, gentle group conversations guided by someone trained to keep the space safe.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-chalkboard"></i></div>
+                <h3>Workshops</h3>
+                <p>Practical sessions on coping, communication, and gentle self-care, taught by people who've done the work themselves.</p>
+            </div>
+            <div class="info-card">
+                <div class="card-icon"><i class="fas fa-mug-hot"></i></div>
+                <h3>Quiet Meetups</h3>
+                <p>Low-pressure, in-person or online gatherings — sometimes the best support is just sitting near someone who gets it.</p>
+            </div>
+        </div>
+        <div class="page-cta">
+            <button class="cta-button" onclick="handleCta(this, event, 'The doors are not open yet, but you are already on the guest list. 🎟️')"><span>See What's Happening</span></button>
+        </div>
+    </div>
+
 </div>
 
 <div class="controls">
@@ -834,6 +1400,50 @@ function toggleMenu() {
     hamburger.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
 }
 
+// In-page navigation between sections ("pages" inside the same webpage)
+function navigateTo(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => p.classList.remove('active'));
+
+    const target = document.getElementById('page-' + pageId);
+    if (target) target.classList.add('active');
+
+    document.querySelectorAll('.nav a').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === pageId);
+    });
+
+    const mainEl = document.getElementById('mainContent');
+    if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Close the mobile sidebar after navigating
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        const hamburger = document.querySelector('.hamburger');
+        if (hamburger) hamburger.textContent = '☰';
+    }
+}
+
+// Gentle toast notification for in-progress page actions
+function showToast(message) {
+    let toast = document.getElementById('appToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'appToast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast._hideTimeout);
+    toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 3400);
+}
+
+function handleCta(el, evt, message) {
+    createRippleEffect(el, evt);
+    showToast(message);
+}
+
 // "Just Be Here" Meditation Screen Functions
 function showMeditationScreen() {
     const meditationScreen = document.getElementById('meditationScreen');
@@ -906,17 +1516,8 @@ function addButtonEffects() {
     document.querySelectorAll('.nav a').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Remove active class from all links
-            document.querySelectorAll('.nav a').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Add active class to clicked link
-            this.classList.add('active');
-            
-            // Ripple effect
             createRippleEffect(this, e);
+            navigateTo(this.dataset.page);
         });
     });
     
